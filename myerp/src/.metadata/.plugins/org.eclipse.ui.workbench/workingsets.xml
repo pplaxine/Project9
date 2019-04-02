@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workingSetManager>
+<workingSet editPageId="org.eclipse.jdt.internal.ui.DynamicSourcesWorkingSet" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1554211614840_0" label="Java Main Sources" name="Java Main Sources">
+<item elementID="=myerp-consumer/src\/main\/java" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=myerp-consumer/src\/main\/resources" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=myerp-model/src\/main\/java" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=myerp-model/src\/main\/resources" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=myerp-technical/src\/main\/java" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=myerp-technical/src\/main\/resources" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=myerp-business/src\/main\/java" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=myerp-business/src\/main\/resources" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+</workingSet>
+<workingSet editPageId="org.eclipse.jdt.internal.ui.DynamicSourcesWorkingSet" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1554211614854_1" label="Java Test Sources" name="Java Test Sources">
+<item elementID="=myerp-model/src\/test\/java" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=myerp-business/src\/test\/java" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=myerp-business/src\/test\/resources" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+</workingSet>
+<workingSet editPageId="org.eclipse.ui.resourceWorkingSetPage" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1554211768141_3" label="myerp" name="myerp">
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/myerp" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/myerp-technical" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/myerp-model" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/myerp-consumer" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/myerp-business" type="4"/>
+</workingSet>
+<workingSet aggregate="true" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1554211619550_2" label="Window Working Set" name="Aggregate for window 1554211619549"/>
+</workingSetManager>
