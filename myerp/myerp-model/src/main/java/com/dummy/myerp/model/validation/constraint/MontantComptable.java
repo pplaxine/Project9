@@ -28,10 +28,10 @@ import javax.validation.constraints.Digits;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {})
 @Documented
-public @interface MontantComptable {
+public @interface MontantComptable {		//new annotation type
 
     /** Message de la violation */
-    String message() default "Taux de TVA invalide";
+    String message() default "Taux de TVA invalide";	//si non specifié prend cette valeur
 
     /** Groupe de validation */
     Class<?>[] groups() default {};
@@ -45,7 +45,7 @@ public @interface MontantComptable {
     @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE })
     @Retention(RetentionPolicy.RUNTIME)
     @Documented
-    @interface List {
+    @interface List {						//new annotation type
         /** List des {@link MontantComptable} */
         MontantComptable[] value();
     }

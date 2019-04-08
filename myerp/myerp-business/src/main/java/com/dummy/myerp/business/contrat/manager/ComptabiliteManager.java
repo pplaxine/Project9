@@ -12,6 +12,8 @@ import com.dummy.myerp.technical.exception.FunctionalException;
  * Interface du manager du package comptabilite.
  */
 public interface ComptabiliteManager {
+	
+
 
     /**
      * Renvoie la liste des comptes comptables.
@@ -50,7 +52,7 @@ public interface ComptabiliteManager {
      * <p><strong>Attention :</strong> l'écriture n'est pas enregistrée en persistance</p>
      * @param pEcritureComptable L'écriture comptable concernée
      */
-    void addReference(EcritureComptable pEcritureComptable);
+    void addReference(EcritureComptable pEcritureComptable) throws FunctionalException;
 
     /**
      * Vérifie que l'Ecriture comptable respecte les règles de gestion.
@@ -67,6 +69,14 @@ public interface ComptabiliteManager {
      * @throws FunctionalException Si l'Ecriture comptable ne respecte pas les règles de gestion
      */
     void insertEcritureComptable(EcritureComptable pEcritureComptable) throws FunctionalException;
+    
+    /**
+     * Insert une nouvelle Séquence écriture comptable.
+     *
+     * @param pEcritureComptable -
+     */
+    void insertSequenceEcritureComptable(EcritureComptable pEcritureComptable) throws FunctionalException;
+    
 
     /**
      * Met à jour l'écriture comptable.
@@ -75,6 +85,14 @@ public interface ComptabiliteManager {
      * @throws FunctionalException Si l'Ecriture comptable ne respecte pas les règles de gestion
      */
     void updateEcritureComptable(EcritureComptable pEcritureComptable) throws FunctionalException;
+    
+    /**
+     * Met à jour la séquence de l'écriture comptable.
+     *
+     * @param pEcritureComptable -
+     * @throws FunctionalException Si la séquence l'Ecriture comptable ne respecte pas les règles de gestion
+     */
+    void updateSequenceEcritureComptable(EcritureComptable pEcritureComptable, int derniereValeurSequence) throws FunctionalException;
 
     /**
      * Supprime l'écriture comptable d'id {@code pId}.

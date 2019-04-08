@@ -35,7 +35,7 @@ public class EcritureComptable {
     private String libelle;
 
     /** La liste des lignes d'écriture comptable. */
-    @Valid
+    @Valid													
     @Size(min = 2)
     private final List<LigneEcritureComptable> listLigneEcriture = new ArrayList<>();
 
@@ -75,20 +75,22 @@ public class EcritureComptable {
         return listLigneEcriture;
     }
 
+    //--------------------------------------------------------------------------------------- A VOIR 
+    
     /**
      * Calcul et renvoie le total des montants au débit des lignes d'écriture
      *
      * @return {@link BigDecimal}, {@link BigDecimal#ZERO} si aucun montant au débit
      */
     // TODO à tester
-    public BigDecimal getTotalDebit() {
-        BigDecimal vRetour = BigDecimal.ZERO;
-        for (LigneEcritureComptable vLigneEcritureComptable : listLigneEcriture) {
+    public BigDecimal getTotalDebit() {								//BigDecimal (nombre dont l'ecriture à virgule est un nombre fini de chiffre, et qui n'a pas de limite de taille comme type primitif)
+        BigDecimal vRetour = BigDecimal.ZERO;						// set to 0 
+        for (LigneEcritureComptable vLigneEcritureComptable : listLigneEcriture) {		//add all DebitLine from listLigneEcriture 
             if (vLigneEcritureComptable.getDebit() != null) {
                 vRetour = vRetour.add(vLigneEcritureComptable.getDebit());
             }
         }
-        return vRetour;
+        return vRetour.stripTrailingZeros(); 	//ADDED AFTER TEST 
     }
 
     /**
@@ -98,20 +100,22 @@ public class EcritureComptable {
      */
     public BigDecimal getTotalCredit() {
         BigDecimal vRetour = BigDecimal.ZERO;
-        for (LigneEcritureComptable vLigneEcritureComptable : listLigneEcriture) {
-            if (vLigneEcritureComptable.getDebit() != null) {
-                vRetour = vRetour.add(vLigneEcritureComptable.getDebit());
+        for (LigneEcritureComptable vLigneEcritureComptable : listLigneEcriture) {		//add all CreditLine from listLigneEcriture ??? 
+            if (vLigneEcritureComptable.getCredit() != null) {
+                vRetour = vRetour.add(vLigneEcritureComptable.getCredit());
             }
         }
-        return vRetour;
+        return vRetour.stripTrailingZeros();	//ADDED AFTER TEST
     }
+    
+    //--------------------------------------------------------------------------------------- A VOIR
 
     /**
      * Renvoie si l'écriture est équilibrée (TotalDebit = TotalCrédit)
      * @return boolean
      */
     public boolean isEquilibree() {
-        boolean vRetour = this.getTotalDebit().equals(getTotalCredit());
+        boolean vRetour = this.getTotalDebit().equals(getTotalCredit());		//if TotalDebit = TotalCredit return true 
         return vRetour;
     }
 

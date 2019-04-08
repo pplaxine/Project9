@@ -22,11 +22,11 @@ public class LigneEcritureComptable {
     private String libelle;
 
     /** The Debit. */
-    @MontantComptable
+    @MontantComptable					//custom annotation
     private BigDecimal debit;
 
     /** The Credit. */
-    @MontantComptable
+    @MontantComptable					//custom annotation
     private BigDecimal credit;
 
 

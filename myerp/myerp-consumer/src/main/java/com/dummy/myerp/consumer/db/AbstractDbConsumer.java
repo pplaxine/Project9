@@ -1,5 +1,9 @@
 package com.dummy.myerp.consumer.db;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javax.sql.DataSource;
@@ -22,7 +26,7 @@ public abstract class AbstractDbConsumer {
 
 
     /** Map des DataSources */
-    private static Map<DataSourcesEnum, DataSource> mapDataSource;
+    private static Map<DataSourcesEnum, DataSource> mapDataSource;			//initialisée via méthode configure  
 
 
     // ==================== Constructeurs ====================
@@ -53,7 +57,8 @@ public abstract class AbstractDbConsumer {
      * @param pDataSourceId -
      * @return SimpleJdbcTemplate
      */
-    protected DataSource getDataSource(DataSourcesEnum pDataSourceId) {
+    protected DataSource getDataSource(DataSourcesEnum pDataSourceId) { //MYERP
+    	
         DataSource vRetour = this.mapDataSource.get(pDataSourceId);
         if (vRetour == null) {
             throw new UnsatisfiedLinkError("La DataSource suivante n'a pas été initialisée : " + pDataSourceId);
@@ -90,23 +95,33 @@ public abstract class AbstractDbConsumer {
      *
      * @param pMapDataSource -
      */
-    public static void configure(Map<DataSourcesEnum, DataSource> pMapDataSource) {
+    public static void configure(Map<DataSourcesEnum, DataSource> pMapDataSource) {			//permet de recup toutes les dataSources de pMapDataSource
         // On pilote l'ajout avec l'Enum et on ne rajoute pas tout à l'aveuglette...
         //   ( pas de AbstractDbDao.mapDataSource.putAll(...) )
-        Map<DataSourcesEnum, DataSource> vMapDataSource = new HashMap<>(DataSourcesEnum.values().length);
-        DataSourcesEnum[] vDataSourceIds = DataSourcesEnum.values();
-        for (DataSourcesEnum vDataSourceId : vDataSourceIds) {
-            DataSource vDataSource = pMapDataSource.get(vDataSourceId);
+        Map<DataSourcesEnum, DataSource> vMapDataSource = new HashMap<>(DataSourcesEnum.values().length);		//map<Enum, DataSource>		//initialisation d'un Hashmap de la taille de l'enum
+       
+        DataSourcesEnum[] vDataSourceIds = DataSourcesEnum.values();		//stock dans un tab d'enum, les valeur de l'enum DataSourceEnum
+        for (DataSourcesEnum vDataSourceId : vDataSourceIds) {				//pour chaque Enum du tab d'Enum 
+            DataSource vDataSource = pMapDataSource.get(vDataSourceId);		//recup dans map (passée en param) la valeur(dataSource) dont key = Enum (cela retourne null si pas dans pMapDataSource) 
             // On test si la DataSource est configurée
             // (NB : elle est considérée comme configurée si elle est dans pMapDataSource mais à null)
-            if (vDataSource == null) {
-                if (!pMapDataSource.containsKey(vDataSourceId)) {
+            if (vDataSource == null) {								//configurée si dataSource est null
+                if (!pMapDataSource.containsKey(vDataSourceId)) {		//pas initialisée si map ne contient pas la key Enum 
                     LOGGER.error("La DataSource " + vDataSourceId + " n'a pas été initialisée !");
                 }
-            } else {
-                vMapDataSource.put(vDataSourceId, vDataSource);
+            } else {												
+                vMapDataSource.put(vDataSourceId, vDataSource);		//si La dataSource n'est pas null on l'ajoute à la vMapDataSource (initialisé dans cette class) 
             }
         }
-        mapDataSource = vMapDataSource;
+        mapDataSource = vMapDataSource;								//map de dataSource est initialisé
+    }
+    
+    // ==================== Méthodes Date Helper ==================== 
+    
+    protected LocalDate dateToLocalDate(Date date) {
+    	
+    	return Instant.ofEpochMilli(date.getTime())
+    		      .atZone(ZoneId.systemDefault())
+    		      .toLocalDate();
     }
 }

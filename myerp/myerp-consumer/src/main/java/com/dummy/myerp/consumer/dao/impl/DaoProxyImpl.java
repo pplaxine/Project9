@@ -23,7 +23,7 @@ public final class DaoProxyImpl implements DaoProxy {
      *
      * @return {@link DaoProxyImpl}
      */
-    protected static DaoProxyImpl getInstance() {
+    public static DaoProxyImpl getInstance() {			//protected (origin) replaced with public 
         return DaoProxyImpl.INSTANCE;
     }
 
@@ -36,7 +36,7 @@ public final class DaoProxyImpl implements DaoProxy {
 
 
     // ==================== Getters/Setters ====================
-    public ComptabiliteDao getComptabiliteDao() {
+    public ComptabiliteDao getComptabiliteDao() {		
         return this.comptabiliteDao;
     }
     public void setComptabiliteDao(ComptabiliteDao pComptabiliteDao) {

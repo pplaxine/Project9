@@ -70,7 +70,7 @@ public class JournalComptable {
     }
 
 
-    // ==================== Méthodes STATIC ====================
+    // ==================== Méthodes STATIC ==================== 
     /**
      * Renvoie le {@link JournalComptable} de code {@code pCode} s'il est présent dans la liste
      *
@@ -78,11 +78,11 @@ public class JournalComptable {
      * @param pCode le code du {@link JournalComptable} à chercher
      * @return {@link JournalComptable} ou {@code null}
      */
-    public static JournalComptable getByCode(List<? extends JournalComptable> pList, String pCode) {
+    public static JournalComptable getByCode(List<? extends JournalComptable> pList, String pCode) {		//param /list JournaleComptable 	/Code 
         JournalComptable vRetour = null;
-        for (JournalComptable vBean : pList) {
-            if (vBean != null && Objects.equals(vBean.getCode(), pCode)) {
-                vRetour = vBean;
+        for (JournalComptable vBean : pList) {										
+            if (vBean != null && Objects.equals(vBean.getCode(), pCode)) {			
+                vRetour = vBean;													//retourne le journal correspondant au code si existe dans list
                 break;
             }
         }

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-                        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 
     <!-- ====================   Consumer   ==================== -->
@@ -10,11 +11,11 @@
     <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
         <property name="targetClass" value="com.dummy.myerp.consumer.db.AbstractDbConsumer"/>
         <property name="targetMethod" value="configure"/>
-        <property name="arguments">
+        <property name="arguments">									<!-- valeur passée en param de la méthode configure (ici une map)-->
             <map>
-                <entry value-ref="dataSourceMYERP">
+                <entry value-ref="dataSourceMYERP">													<!-- map value -->
                     <key>
-                        <value type="com.dummy.myerp.consumer.db.DataSourcesEnum">MYERP</value>
+                        <value type="com.dummy.myerp.consumer.db.DataSourcesEnum">MYERP</value>		<!-- map key (ici un enum : MYERP)-->
                     </key>
                 </entry>
             </map>
@@ -27,27 +28,38 @@
     <!-- ConsumerHelper -->
     <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
         <property name="targetClass" value="com.dummy.myerp.consumer.ConsumerHelper"/>
-        <property name="targetMethod" value="configure"/>
-        <property name="arguments">
+        <property name="targetMethod" value="configure"/>			
+        <property name="arguments">									<!-- valeur passée en param de la méthode configure (ici DaoProxy)-->
             <list>
-                <ref bean="DaoProxy"/>
+                <ref bean="DaoProxy"/>								<!-- ici le bean DaoProxy -->
             </list>
         </property>
     </bean>
 
 
     <!-- DaoProxy -->
-    <bean id="DaoProxy" class="com.dummy.myerp.consumer.dao.impl.DaoProxyImpl" factory-method="getInstance">
-        <property name="comptabiliteDao" ref="ComptabiliteDaoImpl"/>
+    <bean id="DaoProxy" class="com.dummy.myerp.consumer.dao.impl.DaoProxyImpl" factory-method="getInstance">  <!-- methode de la class de reférence (ComptabilitéDaoImpl) qui renvoie instance ComptabilitéDaoImpl -->
+        <property name="comptabiliteDao" ref="ComptabiliteDaoImpl"/>				<!-- instance stocké dans comptabilitéDao de la class DaoProxyImpl -->
     </bean>
 
 
     <!-- ==================== Databases ==================== -->
+    <!--  
     <bean id="dataSourceMYERP" class="com.dummy.myerp.technical.util.spring.NullFactoryBean">
-        <constructor-arg value="javax.sql.DataSource"/>
+        <constructor-arg value="javax.sql.DataSource"/>			-  instancie un objet null DataSource = dataSourceMYERP -
+    </bean> 
+	-->
+	  
+	<bean id="dataSourceMYERP" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="org.postgresql.Driver" />
+		<property name="url" value="jdbc:postgresql://localhost:5432/compta9" />
+		<property name="username" value="adm_compta" />
+		<property name="password" value="mdp2" />			
     </bean>
-
-
+	
+	
     <!-- ========== SQL ========== -->
-    <import resource="sqlContext.xml"/>
+    <import resource="sqlContext.xml"/>		<!-- permet de load avec 1 seul SpringContext xml file, plusieurs Spring context xml : importe dans ce file un autre SpringContext xml file  -->
+    
+    
 </beans>

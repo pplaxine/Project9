@@ -44,6 +44,14 @@
                 ORDER BY ligne_id
             </value>
         </property>
+        <!-- ADDED FOR TEST -->
+        <property name="SQLgetSequenceEcritureComptableByEcritureComptable">
+            <value>
+                SELECT * FROM myerp.sequence_ecriture_comptable
+                WHERE journal_code = :journalCode
+                AND annee = :annee
+            </value>
+        </property>   
         <property name="SQLinsertEcritureComptable">
             <value>
                 INSERT INTO myerp.ecriture_comptable (
@@ -55,10 +63,20 @@
                 )
             </value>
         </property>
+        <property name="SQLinsertSequenceEcritureComptable">
+            <value>
+                INSERT INTO myerp.sequence_ecriture_comptable (
+                    journal_code,
+                    annee, derniere_valeur
+                ) VALUES (
+                    :journal_code, :annee, :derniere_valeur
+                )
+            </value>
+        </property>
         <property name="SQLinsertListLigneEcritureComptable">
             <value>
                 INSERT INTO myerp.ligne_ecriture_comptable (
-                    ecriture_id, ligne_id, compte_comptable_numero, libelle, debit
+                    ecriture_id, ligne_id, compte_comptable_numero, libelle, debit,			<!-- virgule ajoutée (correction)  -->
                     credit
                 ) VALUES (
                     :ecriture_id, :ligne_id, :compte_comptable_numero, :libelle, :debit,
@@ -66,6 +84,7 @@
                 )
             </value>
         </property>
+        
         <property name="SQLupdateEcritureComptable">
             <value>
                 UPDATE myerp.ecriture_comptable SET
@@ -77,6 +96,18 @@
                     id = :id
             </value>
         </property>
+        
+        <property name="SQLupdateSequenceEcritureComptable">
+            <value>
+                UPDATE myerp.sequence_ecriture_comptable SET
+                    derniere_valeur = :derniere_valeur
+                WHERE
+                    journal_code = :journal_code
+                AND 
+                	annee = :annee
+            </value>
+        </property>
+        
         <property name="SQLdeleteEcritureComptable">
             <value>
                 DELETE FROM myerp.ecriture_comptable
@@ -89,6 +120,8 @@
                 WHERE ecriture_id = :ecriture_id
             </value>
         </property>
+        
+
     </bean>
 
 </beans>

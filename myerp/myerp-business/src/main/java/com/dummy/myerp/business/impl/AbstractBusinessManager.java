@@ -1,5 +1,10 @@
 package com.dummy.myerp.business.impl;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+
 import javax.validation.Configuration;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -82,5 +87,28 @@ public abstract class AbstractBusinessManager {
         ValidatorFactory vFactory = vConfiguration.buildValidatorFactory();
         Validator vValidator = vFactory.getValidator();
         return vValidator;
+    }
+    
+    // ==================== Reference builder ====================
+    
+    protected String referenceBuilder(String codeJournalComptable, String anneeEcritureComptable, String numeroDeSequence) {
+    	
+    	StringBuilder reference = new StringBuilder(); 
+		reference.append(codeJournalComptable);
+		reference.append("-");
+		reference.append(anneeEcritureComptable);
+		reference.append("/");
+		reference.append(numeroDeSequence);
+    	
+    	return reference.toString();
+    }
+    
+    // ==================== Date converter Helper ==================== 
+    
+    protected LocalDate dateToLocalDate(Date date) {
+    	
+    	return Instant.ofEpochMilli(date.getTime())
+    		      .atZone(ZoneId.systemDefault())
+    		      .toLocalDate();
     }
 }

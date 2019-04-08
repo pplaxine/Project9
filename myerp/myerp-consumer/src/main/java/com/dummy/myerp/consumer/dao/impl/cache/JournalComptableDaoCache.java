@@ -36,7 +36,7 @@ public class JournalComptableDaoCache {
             listJournalComptable = ConsumerHelper.getDaoProxy().getComptabiliteDao().getListJournalComptable();
         }
 
-        JournalComptable vRetour = JournalComptable.getByCode(listJournalComptable, pCode);
+        JournalComptable vRetour = JournalComptable.getByCode(listJournalComptable, pCode);				//methode static dans model, renvoie le Journal correspondant au code si dans list passé en param
         return vRetour;
     }
 }

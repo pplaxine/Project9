@@ -34,7 +34,7 @@ public class CompteComptable {
      *
      * @param pNumero the numero
      */
-    public CompteComptable(Integer pNumero) {
+    public CompteComptable(Integer pNumero) {							
         numero = pNumero;
     }
 
