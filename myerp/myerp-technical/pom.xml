@@ -101,11 +101,16 @@
 
         <!-- ========== Test Dependencies ========== -->
         <!-- ===== Tests ===== -->
-        <dependency>
+		<dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
+		<dependency>
+		    <groupId>org.mockito</groupId>
+		    <artifactId>mockito-core</artifactId>
+		</dependency>
 
         <!-- ===== JSR 303 - Bean validation ===== -->
         <!-- implementation -->

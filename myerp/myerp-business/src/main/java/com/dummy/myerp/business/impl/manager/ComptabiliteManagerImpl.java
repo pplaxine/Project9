@@ -91,8 +91,6 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
 				
 				//Enregistrer la valeur en persistance	
 				updateSequenceEcritureComptable(pEcritureComptable, sequenceEcritureComptable.getDerniereValeur());
-				
-				
 			}
 			
 		} catch (NotFoundException e) {
@@ -110,23 +108,6 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
 			//Enregistre nouvelle séquence d'ecriture comptable en persistance
 			this.insertSequenceEcritureComptable(pEcritureComptable);
 		}
-    	
-    	
-        
-    	
-    	// TODO à implémenter
-        // Bien se réferer à la JavaDoc de cette méthode !
-        /* Le principe :
-                1.  Remonter depuis la persitance la dernière valeur de la séquence du journal pour l'année de l'écriture
-                    (table sequence_ecriture_comptable)
-                2.  * S'il n'y a aucun enregistrement pour le journal pour l'année concernée :
-                        1. Utiliser le numéro 1.
-                    * Sinon :
-                        1. Utiliser la dernière valeur + 1
-                3.  Mettre à jour la référence de l'écriture avec la référence calculée (RG_Compta_5)
-                4.  Enregistrer (insert/update) la valeur de la séquence en persitance
-                    (table sequence_ecriture_comptable)
-         */
     }
 
     /**
@@ -150,13 +131,13 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
     // TODO tests à compléter
     protected void checkEcritureComptableUnit(EcritureComptable pEcritureComptable) throws FunctionalException {
         // ===== Vérification des contraintes unitaires sur les attributs de l'écriture
-        Set<ConstraintViolation<EcritureComptable>> vViolations = getConstraintValidator().validate(pEcritureComptable);
-//        if (!vViolations.isEmpty()) {
-//            throw new FunctionalException("L'écriture comptable ne respecte pas les règles de gestion.",
-//                                          new ConstraintViolationException(
-//                                              "L'écriture comptable ne respecte pas les contraintes de validation",
-//                                              vViolations));
-//        }
+        Set<ConstraintViolation<EcritureComptable>> vViolations = getConstraintValidator().validate(pEcritureComptable);		//recup Validator via AbstractBusiness, test pEcritureComptable. Si existe ContraintViolation mis dans un Set 
+        if (!vViolations.isEmpty()) {
+            throw new FunctionalException("L'écriture comptable ne respecte pas les règles de gestion.",
+                                          new ConstraintViolationException(
+                                              "L'écriture comptable ne respecte pas les contraintes de validation",
+                                              vViolations));
+        }
 
         // ===== RG_Compta_2 : Pour qu'une écriture comptable soit valide, elle doit être équilibrée
         if (!pEcritureComptable.isEquilibree()) {
@@ -166,13 +147,12 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         // ===== RG_Compta_3 : une écriture comptable doit avoir au moins 2 lignes d'écriture (1 au débit, 1 au crédit)
         int vNbrCredit = 0;
         int vNbrDebit = 0;
-        for (LigneEcritureComptable vLigneEcritureComptable : pEcritureComptable.getListLigneEcriture()) {
-            if (BigDecimal.ZERO.compareTo(ObjectUtils.defaultIfNull(vLigneEcritureComptable.getCredit(),
-                                                                    BigDecimal.ZERO)) != 0) {
-                vNbrCredit++;
+        for (LigneEcritureComptable vLigneEcritureComptable : pEcritureComptable.getListLigneEcriture()) {			//pour chaque ligne d'ecriture comptable 
+            if (BigDecimal.ZERO.compareTo(ObjectUtils.defaultIfNull(vLigneEcritureComptable.getCredit(), BigDecimal.ZERO)) != 0) {		//defaultIfNull: renvoie l'autre si un des param null  
+                vNbrCredit++;	// si credit d'une ligne comptable est egal à null, BigDecimal.Zero est renvoyé. 0 est renvoyé par compareTo. 0 == 0 donc on incremente pas.
+                				// si credit d'une ligne comptable est pas null, sa valeur est renvoyée.  valeur !=0 donc on incremente 
             }
-            if (BigDecimal.ZERO.compareTo(ObjectUtils.defaultIfNull(vLigneEcritureComptable.getDebit(),
-                                                                    BigDecimal.ZERO)) != 0) {
+            if (BigDecimal.ZERO.compareTo(ObjectUtils.defaultIfNull(vLigneEcritureComptable.getDebit(), BigDecimal.ZERO)) != 0) {
                 vNbrDebit++;
             }
         }
@@ -187,6 +167,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
 
         // TODO ===== RG_Compta_5 : Format et contenu de la référence
         // vérifier que l'année dans la référence correspond bien à la date de l'écriture, idem pour le code journal...
+        
     }
 
 
@@ -198,18 +179,18 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
      * @throws FunctionalException Si l'Ecriture comptable ne respecte pas les règles de gestion
      */
     protected void checkEcritureComptableContext(EcritureComptable pEcritureComptable) throws FunctionalException {
-        // ===== RG_Compta_6 : La référence d'une écriture comptable doit être unique
-        if (StringUtils.isNoneEmpty(pEcritureComptable.getReference())) {
+        
+    	// ===== RG_Compta_6 : La référence d'une écriture comptable doit être unique
+        if (StringUtils.isNoneEmpty(pEcritureComptable.getReference())) {			//si EcritureComptable possède une ref 
             try {
                 // Recherche d'une écriture ayant la même référence
-                EcritureComptable vECRef = getDaoProxy().getComptabiliteDao().getEcritureComptableByRef(
-                    pEcritureComptable.getReference());
+                EcritureComptable vECRef = getDaoProxy().getComptabiliteDao().getEcritureComptableByRef(pEcritureComptable.getReference());			//recherche en BDD EcritureComptable avec cette ref (si continue c'est que une ecriture existe (sinon catch)
 
                 // Si l'écriture à vérifier est une nouvelle écriture (id == null),
                 // ou si elle ne correspond pas à l'écriture trouvée (id != idECRef),
                 // c'est qu'il y a déjà une autre écriture avec la même référence
-                if (pEcritureComptable.getId() == null
-                    || !pEcritureComptable.getId().equals(vECRef.getId())) {
+                if (pEcritureComptable.getId() == null																			//si l'ecritureComptable existe en BDD (c'est qu'elle a un id), si celle passé en param n'en possède pas c'est quelle n'est pas encore persistée mais possède pourtant la meme ref.   
+                    || !pEcritureComptable.getId().equals(vECRef.getId())) {													//si l'ecritureComptable possède id mais qui es différent de celle récupe en base de donnée, cela signifie meme ref pour 2 ecritureComptable (dont une déjà persistée)
                     throw new FunctionalException("Une autre écriture comptable existe déjà avec la même référence.");
                 }
             } catch (NotFoundException vEx) {
