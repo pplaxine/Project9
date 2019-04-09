@@ -82,7 +82,6 @@ public class EcritureComptable {
      *
      * @return {@link BigDecimal}, {@link BigDecimal#ZERO} si aucun montant au débit
      */
-    // TODO à tester
     public BigDecimal getTotalDebit() {								//BigDecimal (nombre dont l'ecriture à virgule est un nombre fini de chiffre, et qui n'a pas de limite de taille comme type primitif)
         BigDecimal vRetour = BigDecimal.ZERO;						// set to 0 
         for (LigneEcritureComptable vLigneEcritureComptable : listLigneEcriture) {		//add all DebitLine from listLigneEcriture 

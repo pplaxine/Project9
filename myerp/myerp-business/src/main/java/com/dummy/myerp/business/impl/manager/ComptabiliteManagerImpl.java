@@ -165,8 +165,37 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
                 "L'écriture comptable doit avoir au moins deux lignes : une ligne au débit et une ligne au crédit.");
         }
 
-        // TODO ===== RG_Compta_5 : Format et contenu de la référence
-        // vérifier que l'année dans la référence correspond bien à la date de l'écriture, idem pour le code journal...
+        // ===== RG_Compta_5 : Format et contenu de la référence
+        //On vérifie que l'année dans la référence correspond bien à la date de l'écriture, idem pour le code journal.
+        //On récupère dans un tableau de String les différents éléments composant une référence 
+        String[] token = pEcritureComptable.getReference().split("-|/");
+        String codeJournal = pEcritureComptable.getJournal().getCode();
+        String anneeReference = String.valueOf(dateToLocalDate(pEcritureComptable.getDate()).getYear());
+        int numeroReference = Integer.parseInt(token[2]);
+        if(!token[0].equals(codeJournal)) {
+        	throw new FunctionalException(
+                    "L'écriture comptable comporte une référence érroné: Le code journal de la référence doit être le même que celui du jounalComptable contenant l'ecriture comptable");
+        }else if(!token[1].equals(anneeReference)) {
+        	throw new FunctionalException(
+                    "L'écriture comptable comporte une référence érroné: L'année de la référence doit être la même que celle de la date de l'ecriture comptable");
+        }else if( numeroReference < 1 ) {
+        	throw new FunctionalException(
+                    "L'écriture comptable comporte une référence érroné: Le numero de séquence de la référence doit être superieur à zero");
+        }
+        
+        //On verifie que le numéro de référence, suit bien la sequence du journalComptable auquel l'ecriture comptable est affiliée
+        try {
+        	//retourne la dernière valeur dans le journal auquel l'ecriture comptable est affiliée  
+			SequenceEcritureComptable sec = getDaoProxy().getComptabiliteDao().getSequenceEcritureComptableByEcritureComptable(pEcritureComptable);
+			int derniereValeur = sec.getDerniereValeur();
+			//pas de verification si nouvelle sequence
+			if(numeroReference != 1  && numeroReference != (derniereValeur) ) {
+				throw new FunctionalException(
+	                    "L'écriture comptable comporte une référence érroné: Le numero de séquence de la référence doit suivre la dernière référence du journal comptable auquel l'ecriture comptable est affiliée");
+			}
+		} catch (NotFoundException e) {
+			// LOG 
+		}
         
     }
 

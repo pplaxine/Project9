@@ -50,14 +50,21 @@ public class Main {
 		List<EcritureComptable> lec = bp.getComptabiliteManager().getListEcritureComptable();
 		lec.get(0).setDate(new Date());;
 		
+		
 		bp.getComptabiliteManager().addReference(lec.get(0));
+		EcritureComptable ec = lec.get(0);
+		bp.getComptabiliteManager().insertEcritureComptable(ec);
+		
 		bp.getComptabiliteManager().addReference(lec.get(2));
-		bp.getComptabiliteManager().addReference(lec.get(3));
-		bp.getComptabiliteManager().addReference(lec.get(4));
-		bp.getComptabiliteManager().insertEcritureComptable(lec.get(0));
 		bp.getComptabiliteManager().insertEcritureComptable(lec.get(2));
+		
+		bp.getComptabiliteManager().addReference(lec.get(3));
 		bp.getComptabiliteManager().insertEcritureComptable(lec.get(3));
+		
+		bp.getComptabiliteManager().addReference(lec.get(4));
 		bp.getComptabiliteManager().insertEcritureComptable(lec.get(4));
+		//ec.setReference("AC-2019/00005");
+	
 		System.out.println(lec.get(0).getReference());
 		System.out.println(lec.get(2).getReference());
 		System.out.println(lec.get(3).getReference());
