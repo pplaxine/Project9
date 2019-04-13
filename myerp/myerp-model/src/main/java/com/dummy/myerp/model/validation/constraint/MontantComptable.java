@@ -23,7 +23,7 @@ import javax.validation.constraints.Digits;
  *      <li>{@link java.math.BigDecimal}</li>
  *  </ul>
  */
-@Digits(integer = 13, fraction = 2)
+@Digits(integer = 13, fraction = 2)	//integer = max digits as all - fraction = max digits avec xxx.
 @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {})

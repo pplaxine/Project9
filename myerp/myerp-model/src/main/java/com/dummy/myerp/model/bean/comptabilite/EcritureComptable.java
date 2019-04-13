@@ -22,12 +22,14 @@ public class EcritureComptable {
     /** The Id. */
     private Integer id;
     /** Journal comptable */
-    @NotNull private JournalComptable journal;
+    @NotNull 
+    private JournalComptable journal;
     /** The Reference. */
     @Pattern(regexp = "\\D{1,5}-\\d{4}/\\d{5}")						//modif du regex 
     private String reference;
     /** The Date. */
-    @NotNull private Date date;
+    @NotNull private 
+    Date date;
 
     /** The Libelle. */
     @NotNull

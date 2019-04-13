@@ -64,7 +64,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
     // TODO à tester
     @Override
     public synchronized void addReference(EcritureComptable pEcritureComptable) throws FunctionalException{
-    		
+    	
 	    	String codeJournalComptable = pEcritureComptable.getJournal().getCode();
 	    	String anneeEcritureComptable = Integer.toString(dateToLocalDate(pEcritureComptable.getDate()).getYear());
 	    	String numeroDeSequence ="";
@@ -74,13 +74,10 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
 			SequenceEcritureComptable sequenceEcritureComptable = getDaoProxy().getComptabiliteDao().getSequenceEcritureComptableByEcritureComptable(pEcritureComptable);
 			
 			if(sequenceEcritureComptable != null ) {
-				
 				//MàJ de la dernière valeur de la séquence 
 				if(sequenceEcritureComptable.getDerniereValeur() != null && sequenceEcritureComptable.getDerniereValeur() != 0 ) {
 					numeroDeSequence = new DecimalFormat("00000").format(sequenceEcritureComptable.getDerniereValeur()+1);
 					sequenceEcritureComptable.setDerniereValeur(Integer.valueOf(numeroDeSequence));
-				}else {
-					sequenceEcritureComptable.setDerniereValeur(1);
 				}
 				
 				//création de la référence 
@@ -128,20 +125,24 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
      * @param pEcritureComptable -
      * @throws FunctionalException Si l'Ecriture comptable ne respecte pas les règles de gestion
      */
-    // TODO tests à compléter
     protected void checkEcritureComptableUnit(EcritureComptable pEcritureComptable) throws FunctionalException {
-        // ===== Vérification des contraintes unitaires sur les attributs de l'écriture
-        Set<ConstraintViolation<EcritureComptable>> vViolations = getConstraintValidator().validate(pEcritureComptable);		//recup Validator via AbstractBusiness, test pEcritureComptable. Si existe ContraintViolation mis dans un Set 
-        if (!vViolations.isEmpty()) {
-            throw new FunctionalException("L'écriture comptable ne respecte pas les règles de gestion.",
-                                          new ConstraintViolationException(
-                                              "L'écriture comptable ne respecte pas les contraintes de validation",
-                                              vViolations));
-        }
 
-        // ===== RG_Compta_2 : Pour qu'une écriture comptable soit valide, elle doit être équilibrée
-        if (!pEcritureComptable.isEquilibree()) {
-            throw new FunctionalException("L'écriture comptable n'est pas équilibrée.");
+        // ===== RG_Compta_5 : Format et contenu de la référence (code journal, annee ecriture comptable) 
+        //On vérifie que l'année dans la référence correspond bien à la date de l'écriture, idem pour le code journal.
+        //On récupère dans un tableau de String les différents éléments composant une référence 
+        String[] token = pEcritureComptable.getReference().split("-|/");
+        String codeJournal = pEcritureComptable.getJournal().getCode();
+        String anneeReference = String.valueOf(dateToLocalDate(pEcritureComptable.getDate()).getYear());
+        int numeroReference = Integer.parseInt(token[2]);
+        if(!token[0].equals(codeJournal)) {
+        	throw new FunctionalException(
+                    "L'écriture comptable comporte une référence érroné: Le code journal de la référence doit être le même que celui du jounalComptable contenant l'ecriture comptable");
+        }else if(!token[1].equals(anneeReference)) {
+        	throw new FunctionalException(
+                    "L'écriture comptable comporte une référence érroné: L'année de la référence doit être la même que celle de la date de l'ecriture comptable");
+        }else if( numeroReference < 1 ) {
+        	throw new FunctionalException(
+                    "L'écriture comptable comporte une référence érroné: Le numero de séquence de la référence doit être superieur à zero");
         }
 
         // ===== RG_Compta_3 : une écriture comptable doit avoir au moins 2 lignes d'écriture (1 au débit, 1 au crédit)
@@ -164,41 +165,23 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
             throw new FunctionalException(
                 "L'écriture comptable doit avoir au moins deux lignes : une ligne au débit et une ligne au crédit.");
         }
-
-        // ===== RG_Compta_5 : Format et contenu de la référence
-        //On vérifie que l'année dans la référence correspond bien à la date de l'écriture, idem pour le code journal.
-        //On récupère dans un tableau de String les différents éléments composant une référence 
-        String[] token = pEcritureComptable.getReference().split("-|/");
-        String codeJournal = pEcritureComptable.getJournal().getCode();
-        String anneeReference = String.valueOf(dateToLocalDate(pEcritureComptable.getDate()).getYear());
-        int numeroReference = Integer.parseInt(token[2]);
-        if(!token[0].equals(codeJournal)) {
-        	throw new FunctionalException(
-                    "L'écriture comptable comporte une référence érroné: Le code journal de la référence doit être le même que celui du jounalComptable contenant l'ecriture comptable");
-        }else if(!token[1].equals(anneeReference)) {
-        	throw new FunctionalException(
-                    "L'écriture comptable comporte une référence érroné: L'année de la référence doit être la même que celle de la date de l'ecriture comptable");
-        }else if( numeroReference < 1 ) {
-        	throw new FunctionalException(
-                    "L'écriture comptable comporte une référence érroné: Le numero de séquence de la référence doit être superieur à zero");
+        
+        
+        // ===== RG_Compta_2 : Pour qu'une écriture comptable soit valide, elle doit être équilibrée
+        if (!pEcritureComptable.isEquilibree()) {
+            throw new FunctionalException("L'écriture comptable n'est pas équilibrée.");
         }
         
-        //On verifie que le numéro de référence, suit bien la sequence du journalComptable auquel l'ecriture comptable est affiliée
-        try {
-        	//retourne la dernière valeur dans le journal auquel l'ecriture comptable est affiliée  
-			SequenceEcritureComptable sec = getDaoProxy().getComptabiliteDao().getSequenceEcritureComptableByEcritureComptable(pEcritureComptable);
-			int derniereValeur = sec.getDerniereValeur();
-			//pas de verification si nouvelle sequence
-			if(numeroReference != 1  && numeroReference != (derniereValeur) ) {
-				throw new FunctionalException(
-	                    "L'écriture comptable comporte une référence érroné: Le numero de séquence de la référence doit suivre la dernière référence du journal comptable auquel l'ecriture comptable est affiliée");
-			}
-		} catch (NotFoundException e) {
-			// LOG 
-		}
+    	// ===== Vérification des contraintes unitaires sur les attributs de l'écriture
+        Set<ConstraintViolation<EcritureComptable>> vViolations = getConstraintValidator().validate(pEcritureComptable);		//recup Validator via AbstractBusiness, test pEcritureComptable. Si existe ContraintViolation mis dans un Set 
+        if (!vViolations.isEmpty()) {
+            throw new FunctionalException("L'écriture comptable ne respecte pas les règles de gestion." + vViolations.toString(),
+                                          new ConstraintViolationException(
+                                              "L'écriture comptable ne respecte pas les contraintes de validation",
+                                              vViolations));
+        }
         
     }
-
 
     /**
      * Vérifie que l'Ecriture comptable respecte les règles de gestion liées au contexte
@@ -209,6 +192,24 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
      */
     protected void checkEcritureComptableContext(EcritureComptable pEcritureComptable) throws FunctionalException {
         
+    	// ===== RG_Compta_5 : La référence doit suivre la séquence du journalComptable auquel l'ecriture comptable est affiliée
+        //On récupère dans un tableau de String les différents éléments composant une référence 
+        String[] token = pEcritureComptable.getReference().split("-|/");
+    	//On verifie que le numéro de référence, 
+        try {
+        	//retourne la dernière valeur dans le journal auquel l'ecriture comptable est affiliée  
+			SequenceEcritureComptable sec = getDaoProxy().getComptabiliteDao().getSequenceEcritureComptableByEcritureComptable(pEcritureComptable);
+			int derniereValeur = sec.getDerniereValeur();
+			int numeroReference = Integer.parseInt(token[2]);
+			//pas de verification si nouvelle sequence
+			if(numeroReference != 1  && numeroReference != (derniereValeur) ) {
+				throw new FunctionalException(
+	                    "L'écriture comptable comporte une référence érroné: Le numero de séquence de la référence doit suivre la dernière référence du journal comptable auquel l'ecriture comptable est affiliée");
+			}
+		} catch (NotFoundException e) {
+			// LOG 
+		}
+    	
     	// ===== RG_Compta_6 : La référence d'une écriture comptable doit être unique
         if (StringUtils.isNoneEmpty(pEcritureComptable.getReference())) {			//si EcritureComptable possède une ref 
             try {

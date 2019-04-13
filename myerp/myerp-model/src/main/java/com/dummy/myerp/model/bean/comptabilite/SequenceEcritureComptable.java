@@ -1,5 +1,6 @@
 package com.dummy.myerp.model.bean.comptabilite;
 
+import javax.validation.constraints.Pattern;
 
 /**
  * Bean représentant une séquence pour les références d'écriture comptable

@@ -32,7 +32,6 @@ public class EcritureComptableTest {
     	vEcriture.getListLigneEcriture().add(this.createLigne(1, "3", "18"));
     	vEcriture.getListLigneEcriture().add(this.createLigne(1, null, null));
     	Assert.assertEquals("Test" + vEcriture.getLibelle(), vEcriture.getTotalDebit(), new BigDecimal(13.5));
-    	
     }
     
     @Test		//ADDED FOR TEST
@@ -45,7 +44,6 @@ public class EcritureComptableTest {
     	vEcriture.getListLigneEcriture().add(this.createLigne(1, "3", "11.50"));
     	vEcriture.getListLigneEcriture().add(this.createLigne(1, null, null));
     	Assert.assertEquals("Test" + vEcriture.getLibelle(), vEcriture.getTotalCredit(), new BigDecimal(22));
-    	
     }
     
     @Test
