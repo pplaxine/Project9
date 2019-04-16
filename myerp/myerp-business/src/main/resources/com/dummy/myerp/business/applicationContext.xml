@@ -15,7 +15,6 @@
         <constructor-arg ref="TransactionManager"/>
     </bean>
 
-
     <!-- ========== Transaction Managers ========== -->
     <import resource="transactionContext.xml"/>
 </beans>

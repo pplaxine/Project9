@@ -90,7 +90,6 @@
             <artifactId>spring-beans</artifactId>
         </dependency>
 
-
         <!-- ===== JSR 303 - Bean validation ===== -->
         <!-- interface -->
         <dependency>
