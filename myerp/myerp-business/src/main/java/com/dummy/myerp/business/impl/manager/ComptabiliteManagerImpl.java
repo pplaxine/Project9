@@ -19,6 +19,7 @@ import com.dummy.myerp.model.bean.comptabilite.LigneEcritureComptable;
 import com.dummy.myerp.model.bean.comptabilite.SequenceEcritureComptable;
 import com.dummy.myerp.technical.exception.FunctionalException;
 import com.dummy.myerp.technical.exception.NotFoundException;
+import com.dummy.myerp.technical.exception.TechnicalException;
 
 
 /**
@@ -60,10 +61,11 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
 
     /**
      * {@inheritDoc}
+     * @throws TechnicalException 
+     * @throws FunctionalException 
      */
-    // TODO à tester
     @Override
-    public synchronized void addReference(EcritureComptable pEcritureComptable) throws FunctionalException{
+    public synchronized void addReference(EcritureComptable pEcritureComptable) throws TechnicalException, FunctionalException{
     	
 	    	String codeJournalComptable = pEcritureComptable.getJournal().getCode();
 	    	String anneeEcritureComptable = Integer.toString(dateToLocalDate(pEcritureComptable.getDate()).getYear());
@@ -73,12 +75,11 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
     		//verification d'existence de sequence d'ecriture comptable 
 			SequenceEcritureComptable sequenceEcritureComptable = getDaoProxy().getComptabiliteDao().getSequenceEcritureComptableByEcritureComptable(pEcritureComptable);
 			
-			if(sequenceEcritureComptable != null ) {
+			if(sequenceEcritureComptable != null && sequenceEcritureComptable.getDerniereValeur() != null ) {
 				//MàJ de la dernière valeur de la séquence 
-				if(sequenceEcritureComptable.getDerniereValeur() != null && sequenceEcritureComptable.getDerniereValeur() != 0 ) {
-					numeroDeSequence = new DecimalFormat("00000").format(sequenceEcritureComptable.getDerniereValeur()+1);
-					sequenceEcritureComptable.setDerniereValeur(Integer.valueOf(numeroDeSequence));
-				}
+				numeroDeSequence = new DecimalFormat("00000").format(sequenceEcritureComptable.getDerniereValeur()+1);
+				sequenceEcritureComptable.setDerniereValeur(Integer.valueOf(numeroDeSequence));
+				
 				
 				//création de la référence 
 				String reference = referenceBuilder(codeJournalComptable, anneeEcritureComptable, numeroDeSequence);
@@ -88,6 +89,8 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
 				
 				//Enregistrer la valeur en persistance	
 				updateSequenceEcritureComptable(pEcritureComptable, sequenceEcritureComptable.getDerniereValeur());
+			}else {
+				throw new TechnicalException("La sequence du jounal comptable " + codeJournalComptable + " " + anneeEcritureComptable + " ou sa dernière valeur est null");
 			}
 			
 		} catch (NotFoundException e) {
@@ -192,26 +195,27 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
      */
     protected void checkEcritureComptableContext(EcritureComptable pEcritureComptable) throws FunctionalException {
         
-    	// ===== RG_Compta_5 : La référence doit suivre la séquence du journalComptable auquel l'ecriture comptable est affiliée
-        //On récupère dans un tableau de String les différents éléments composant une référence 
-        String[] token = pEcritureComptable.getReference().split("-|/");
-    	//On verifie que le numéro de référence, 
-        try {
-        	//retourne la dernière valeur dans le journal auquel l'ecriture comptable est affiliée  
-			SequenceEcritureComptable sec = getDaoProxy().getComptabiliteDao().getSequenceEcritureComptableByEcritureComptable(pEcritureComptable);
-			int derniereValeur = sec.getDerniereValeur();
-			int numeroReference = Integer.parseInt(token[2]);
-			//pas de verification si nouvelle sequence
-			if(numeroReference != 1  && numeroReference != (derniereValeur) ) {
+    	if (StringUtils.isNoneEmpty(pEcritureComptable.getReference())) {			//si EcritureComptable possède une ref 
+	    	// ===== RG_Compta_5 : La référence doit suivre la séquence du journalComptable auquel l'ecriture comptable est affiliée
+	        //On récupère dans un tableau de String les différents éléments composant une référence 
+	        String[] token = pEcritureComptable.getReference().split("-|/");
+	    	//On verifie que le numéro de référence, 
+	        try {
+	        	//retourne la dernière valeur dans le journal auquel l'ecriture comptable est affiliée  
+				SequenceEcritureComptable sec = getDaoProxy().getComptabiliteDao().getSequenceEcritureComptableByEcritureComptable(pEcritureComptable);
+				int derniereValeur = sec.getDerniereValeur();
+				int numeroReference = Integer.parseInt(token[2]);
+				//pas de verification si nouvelle sequence
+				if(numeroReference != 1  && numeroReference != (derniereValeur) ) {
+					throw new FunctionalException(
+		                    "L'écriture comptable comporte une référence érroné: Le numero de séquence de la référence doit suivre la dernière référence du journal comptable auquel l'ecriture comptable est affiliée");
+				}
+			} catch (NotFoundException e) {
 				throw new FunctionalException(
-	                    "L'écriture comptable comporte une référence érroné: Le numero de séquence de la référence doit suivre la dernière référence du journal comptable auquel l'ecriture comptable est affiliée");
+	                    "L'écriture comptable comporte une référence érroné: Le numero de séquence de la référence n'a pas été persisté");
 			}
-		} catch (NotFoundException e) {
-			// LOG 
-		}
-    	
-    	// ===== RG_Compta_6 : La référence d'une écriture comptable doit être unique
-        if (StringUtils.isNoneEmpty(pEcritureComptable.getReference())) {			//si EcritureComptable possède une ref 
+	    	
+	        // ===== RG_Compta_6 : La référence d'une écriture comptable doit être unique
             try {
                 // Recherche d'une écriture ayant la même référence
                 EcritureComptable vECRef = getDaoProxy().getComptabiliteDao().getEcritureComptableByRef(pEcritureComptable.getReference());			//recherche en BDD EcritureComptable avec cette ref (si continue c'est que une ecriture existe (sinon catch)
@@ -226,7 +230,10 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
             } catch (NotFoundException vEx) {
                 // Dans ce cas, c'est bon, ça veut dire qu'on n'a aucune autre écriture avec la même référence.
             }
+        }else {
+        	throw new FunctionalException("L'écriture comptable ne possède pas de référence");
         }
+    	
     }
 
     /**
