@@ -213,7 +213,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
 			} catch (NotFoundException e) {
 				throw new FunctionalException(
 	                    "L'écriture comptable comporte une référence érroné: Le numero de séquence de la référence n'a pas été persisté");
-			}
+				}
 	    	
 	        // ===== RG_Compta_6 : La référence d'une écriture comptable doit être unique
             try {
