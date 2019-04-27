@@ -240,5 +240,17 @@ public class ComptabiliteManagerIntTest {
     	
     }
     
-    
+    // ---------- DELETE ----------
+    @Test
+    public void deleteEcritureComptable() throws FunctionalException {
+    	long sizeListEcritureComptable;
+    	long sizeListEcritureComptableAfterDelete;
+    	
+    	sizeListEcritureComptable = manager.getListEcritureComptable().stream().count();
+    	manager.deleteEcritureComptable(-3);
+    	sizeListEcritureComptableAfterDelete = manager.getListEcritureComptable().stream().count();
+    	
+    	assertEquals(sizeListEcritureComptableAfterDelete, sizeListEcritureComptable - 1);
+    	
+    }
 }
