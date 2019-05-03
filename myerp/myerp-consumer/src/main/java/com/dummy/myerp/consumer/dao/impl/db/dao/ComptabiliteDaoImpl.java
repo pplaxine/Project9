@@ -305,7 +305,7 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
 			vJdbcTemplate.update(SQLupdateSequenceEcritureComptable, vSqlParams);
 			
 		} catch (NotFoundException e) {
-			e.printStackTrace();
+			//Logger 
 		}
 		
 		
