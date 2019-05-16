@@ -1,11 +1,12 @@
-# Project9 - Implementation of unit and integration tests for a Billing and Accounting System, executed in an implemented continuous integration pipeline. 
+# Project9 - Implementation of unit and integration tests for a Billing and Accounting System, executed in an implemented continuous integration pipeline - 
 
 This is a continuous integration environment setup for a Billing and accouting System. The Jenkins testings and code quality analyses are triggered after each commit to the following github repository : https://github.com/pplaxine/Project9
 
 The integration tests being run for each layer (Business and Consumer) through different maven profiles, you can also choose to run tests separatly via the following jenkins jobs :  
-    . Unit tests : run Project9UnitTest  
-    . Unit tests + Integration tests on consumer layer : Project9IntegrationTestConsumerLayer  
-    . Unit tests + Integration tests on business layer : Project9IntegrationTestBusinessLayer  
+
+    - Unit tests : run Project9UnitTest  
+    - Unit tests + Integration tests on consumer layer : Project9IntegrationTestConsumerLayer  
+    - Unit tests + Integration tests on business layer : Project9IntegrationTestBusinessLayer  
  
 
 ## Getting Started 
