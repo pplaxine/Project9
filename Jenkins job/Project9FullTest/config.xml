@@ -65,7 +65,7 @@ mvn clean jacoco:prepare-agent-integration package -P test-consumer,test-busines
     </jenkins.plugins.docker__compose.DockerComposeBuilder>
     <hudson.tasks.BatchFile>
       <command>sleep 13s&#xd;
-explorer &quot;http://192.168.99.101:9000/projects?sort=-analysis_date&quot;&#xd;
+explorer &quot;http://192.168.99.102:9000/projects?sort=-analysis_date&quot;&#xd;
 docker ps -a</command>
     </hudson.tasks.BatchFile>
   </builders>
