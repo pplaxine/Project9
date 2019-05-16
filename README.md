@@ -51,7 +51,11 @@ The integration tests being run for each layer (Business and Consumer) through d
 
 Install Java JRE version 8 or higher.
 
-Install Docker (for more information : https://www.docker.com/). 
+Install the latest version of Maven (for more information : https://maven.apache.org/). 
+
+Install the latest version of Docker (for more information : https://www.docker.com/). 
+
+Install the latest version of Jenkins (for more information : https://jenkins.io/). 
 
 ## Built With
 
