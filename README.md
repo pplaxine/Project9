@@ -39,9 +39,10 @@ The integration tests being run for each layer (Business and Consumer) through d
   
   1. Add the jenkins jobs folders in yourJenkinsHomeDirectory/jobs
   2. Go to "Manage Jenkins" and select "Reload Configuration from Disk" 
-  3. All jobs should be now visible on your jenkins homepage 
+  3. All jobs should be now visible on your jenkins homepage
 
-  *Warning*  
+  *Warning*
+
   4. Make sure to run SonarqubeDeployement job first as the Sonarqube server takes several minutes before being operational. You can check the progress at the following address : http://yourDockerMachineIp:9000/
   5. Run the job of your choice (*Important*: Project9IntegrationTestBusinessLayer and Project9IntegrationTestConsumerLayer can't be ran simultaneously as they both use the same database docker container). 
 
