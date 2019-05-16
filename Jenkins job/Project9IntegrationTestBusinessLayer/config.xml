@@ -1,0 +1,62 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>Runs integration tests of ProjectCompta9 app on business layer (via test-business profile) . </description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <com.coravy.hudson.plugins.github.GithubProjectProperty plugin="github@1.29.4">
+      <projectUrl>https://github.com/pplaxine/Project9/</projectUrl>
+      <displayName></displayName>
+    </com.coravy.hudson.plugins.github.GithubProjectProperty>
+  </properties>
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@3.9.3">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>https://github.com/pplaxine/Project9.git</url>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>*/master</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="list"/>
+    <extensions/>
+  </scm>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <jenkins.plugins.docker__compose.DockerComposeBuilder plugin="docker-compose-build-step@1.0">
+      <useCustomDockerComposeFile>true</useCustomDockerComposeFile>
+      <dockerComposeFile>docker/dev/docker-compose.yml</dockerComposeFile>
+      <option class="jenkins.plugins.docker_compose.StopAllServices"/>
+    </jenkins.plugins.docker__compose.DockerComposeBuilder>
+    <hudson.tasks.BatchFile>
+      <command>docker ps</command>
+    </hudson.tasks.BatchFile>
+    <jenkins.plugins.docker__compose.DockerComposeBuilder plugin="docker-compose-build-step@1.0">
+      <useCustomDockerComposeFile>true</useCustomDockerComposeFile>
+      <dockerComposeFile>docker/dev/docker-compose.yml</dockerComposeFile>
+      <option class="jenkins.plugins.docker_compose.StartAllServices"/>
+    </jenkins.plugins.docker__compose.DockerComposeBuilder>
+    <hudson.tasks.BatchFile>
+      <command>docker ps&#xd;
+sleep 9s&#xd;
+cd myerp&#xd;
+mvn clean package -P test-business</command>
+    </hudson.tasks.BatchFile>
+    <jenkins.plugins.docker__compose.DockerComposeBuilder plugin="docker-compose-build-step@1.0">
+      <useCustomDockerComposeFile>true</useCustomDockerComposeFile>
+      <dockerComposeFile>docker/dev/docker-compose.yml</dockerComposeFile>
+      <option class="jenkins.plugins.docker_compose.StopAllServices"/>
+    </jenkins.plugins.docker__compose.DockerComposeBuilder>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>

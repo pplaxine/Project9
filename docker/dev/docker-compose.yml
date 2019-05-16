@@ -3,7 +3,7 @@ services:
   myerp.db:
     image: postgres:9.4
     ports:
-      - "192.168.99.101:9032:5432"
+      - "192.168.99.102:9032:5432"
     volumes:
 #      - "./data/db:/var/lib/postgresql/data"
        - "./init/db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d"
