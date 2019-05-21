@@ -77,7 +77,7 @@ public class EcritureComptable {
         return listLigneEcriture;
     }
 
-    //--------------------------------------------------------------------------------------- A VOIR 
+    //---------------------------------------------------------------------------------------  
     
     /**
      * Calcul et renvoie le total des montants au débit des lignes d'écriture
@@ -101,7 +101,7 @@ public class EcritureComptable {
      */
     public BigDecimal getTotalCredit() {
         BigDecimal vRetour = BigDecimal.ZERO;
-        for (LigneEcritureComptable vLigneEcritureComptable : listLigneEcriture) {		//add all CreditLine from listLigneEcriture ??? 
+        for (LigneEcritureComptable vLigneEcritureComptable : listLigneEcriture) {		//add all CreditLine from listLigneEcriture 
             if (vLigneEcritureComptable.getCredit() != null) {
                 vRetour = vRetour.add(vLigneEcritureComptable.getCredit());
             }
@@ -109,7 +109,7 @@ public class EcritureComptable {
         return vRetour.stripTrailingZeros();	//ADDED AFTER TEST
     }
     
-    //--------------------------------------------------------------------------------------- A VOIR
+    //---------------------------------------------------------------------------------------
 
     /**
      * Renvoie si l'écriture est équilibrée (TotalDebit = TotalCrédit)

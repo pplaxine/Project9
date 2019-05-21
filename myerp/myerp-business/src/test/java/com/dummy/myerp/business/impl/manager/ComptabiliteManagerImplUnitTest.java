@@ -54,7 +54,6 @@ public class ComptabiliteManagerImplUnitTest {
     
     @BeforeClass
     public static void executeBeforeAll() throws ParseException, FunctionalException {
-    	//ApplicationContext ctx = new FileSystemXmlApplicationContext(new String[] {"../myerp-consumer/src/main/resources/com/dummy/myerp/consumer/applicationContext.xml","src/main/resources/com/dummy/myerp/business/applicationContext.xml" });
     	sdf = new SimpleDateFormat("dd/MM/yyyy");
     	date = sdf.parse("21/12/2019");
     }

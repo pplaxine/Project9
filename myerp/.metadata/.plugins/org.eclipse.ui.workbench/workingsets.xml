@@ -16,10 +16,10 @@
 <item elementID="=myerp-business/src\/test\/resources" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 </workingSet>
 <workingSet editPageId="org.eclipse.ui.resourceWorkingSetPage" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1554211768141_3" label="myerp" name="myerp">
-<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/myerp" type="4"/>
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/myerp-technical" type="4"/>
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/myerp-model" type="4"/>
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/myerp-consumer" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/myerp" type="4"/>
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/myerp-business" type="4"/>
 </workingSet>
 <workingSet aggregate="true" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1554211619550_2" label="Window Working Set" name="Aggregate for window 1554211619549"/>
